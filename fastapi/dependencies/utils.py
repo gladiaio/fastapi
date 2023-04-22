@@ -817,6 +817,10 @@ def get_body_field(*, dependant: Dependant, name: str) -> Optional[ModelField]:
     model_name = "Body_" + name
     BodyModel: Type[BaseModel] = create_model(model_name)
     for f in flat_dependant.body_params:
+        if getattr(param.field_info, "example", Undefined) is not Undefined:
+            param.field_info.extra["example"] = getattr(param.field_info, "example", Undefined)
+        if getattr(param.field_info, "examples", None) is not None:
+            param.field_info.extra["examples"] = getattr(param.field_info, "examples", None)
         BodyModel.__fields__[f.name] = f
     required = any(True for f in flat_dependant.body_params if f.required)
 
